@@ -12,14 +12,64 @@
 					"name": "xmlsource"
 				}
 			],
-			"sinks": [],
-			"transformations": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sqldb_books",
+						"type": "DatasetReference"
+					},
+					"name": "sinkbooktable"
+				}
+			],
+			"transformations": [
+				{
+					"name": "flattenXML"
+				}
+			],
 			"scriptLines": [
-				"source(allowSchemaDrift: true,",
+				"source(output(",
+				"          catalog as (book as ({@id} as string, author as string, description as string, genre as string, price as double, publish_date as date, title as string)[])",
+				"     ),",
+				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     validationMode: 'none',",
-				"     namespaces: true) ~> xmlsource"
+				"     namespaces: true) ~> xmlsource",
+				"xmlsource foldDown(unroll(catalog.book, catalog.book),",
+				"     mapColumn(",
+				"          {@id} = catalog.book.{@id},",
+				"          author = catalog.book.author,",
+				"          description = catalog.book.description,",
+				"          genre = catalog.book.genre,",
+				"          price = catalog.book.price,",
+				"          publish_date = catalog.book.publish_date,",
+				"          title = catalog.book.title",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flattenXML",
+				"flattenXML sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          id as string,",
+				"          author as string,",
+				"          title as string,",
+				"          genre as string,",
+				"          price as double",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          author,",
+				"          title,",
+				"          genre,",
+				"          price",
+				"     )) ~> sinkbooktable"
 			]
 		}
 	}
