@@ -1,0 +1,9 @@
+{
+	"name": "df-xml-transformation-dev",
+	"location": "southeastasia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "b43ede1b-13fd-4256-a7e1-ecd52bff75d6",
+		"tenantId": "f3cb4d93-74b4-43d7-95bd-20740b7c68bf"
+	}
+}
