@@ -100,12 +100,12 @@ jobs:
           name: 'Publish-Files'
           path: ${{ github.workspace }}/Publish-Files
 
-  #     # Login to Azure
-  #     - name: Azure Login
-  #     - uses: azure/login@v1
-  #       with:
-  #         creds: '{"clientId": "", "clientSecret": "", "subscriptionId": "", "tenantId": ""}'
-  #         enable-AzPSSession: true
+      # Login to Azure
+      - name: Azure Login
+      - uses: azure/login@v1
+        with:
+          creds: '{"clientId": "${{ secrets.ARM_CLIENT_ID }}", "clientSecret": "${{ secrets.ARM_CLIENT_SECRET }}", "subscriptionId": "${{ secrets.ARM_SUBSCRIPTION_ID }}", "tenantId": "${{ secrets.ARM_TENANT_ID }}"}'
+          enable-AzPSSession: true
 
   #     # Deploy ADF
   #     - name: Data Factory Deployment
