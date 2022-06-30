@@ -96,33 +96,33 @@ jobs:
     steps:
 
     #Show Environment Variables
-    - name: Display Environment Variable
-      uses: azure/powershell@v1
-      with:
-        inlineScript: |
-          dir env:
-        azPSVersion: '3.1.0'
+      - name: Display Environment Variable
+        uses: azure/powershell@v1
+        with:
+          inlineScript: |
+            dir env:
+          azPSVersion: '3.1.0'
 
-    # Download Publish Files
-    - name: 'Download Artifact: Publish-Files'
-      uses: actions/download-artifact@v2
-      with:
-        name: 'Publish-Files'
-        path: ${{ github.workspace }}/Publish-Files
+      # Download Publish Files
+      - name: 'Download Artifact: Publish-Files'
+        uses: actions/download-artifact@v2
+        with:
+          name: 'Publish-Files'
+          path: ${{ github.workspace }}/Publish-Files
 
-    # Login to Azure
-    - name: Azure Login
-    - uses: azure/login@v1
-      with:
-        creds: '{"clientId": "", "clientSecret": "", "subscriptionId": "", "tenantId": ""}'
-        enable-AzPSSession: true
+      # Login to Azure
+      - name: Azure Login
+      - uses: azure/login@v1
+        with:
+          creds: '{"clientId": "", "clientSecret": "", "subscriptionId": "", "tenantId": ""}'
+          enable-AzPSSession: true
 
-    # Deploy ADF
-    - name: Data Factory Deployment
-      uses: Azure/data-factory-deploy-action@v1.2.0
-      with:
-        resoruceGroupName: "${{ github.event.inputs.RESOURCE_GROUP }}"
-        dataFactoryName: "${{ github.event.inputs.ADF_NAME}}"
-        armTemplateFile: "${{ github.workspace }}/Publish-Files/ARMTemplateForFactory.json"
-        armTemplateParametersFile: "${{ github.workspace }}/Publish-Files/ARMTemplateParametersForFactory.json"
+      # Deploy ADF
+      - name: Data Factory Deployment
+        uses: Azure/data-factory-deploy-action@v1.2.0
+        with:
+          resoruceGroupName: "${{ github.event.inputs.RESOURCE_GROUP }}"
+          dataFactoryName: "${{ github.event.inputs.ADF_NAME}}"
+          armTemplateFile: "${{ github.workspace }}/Publish-Files/ARMTemplateForFactory.json"
+          armTemplateParametersFile: "${{ github.workspace }}/Publish-Files/ARMTemplateParametersForFactory.json"
       
