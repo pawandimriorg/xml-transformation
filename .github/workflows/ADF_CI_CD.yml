@@ -42,27 +42,17 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      # - name: 'Publish Artifacts: Publish: ARM-Template'
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #    name: 'ARM-Templates'
+      #    path: '${{ github.workspace }}/ARM-Templates'
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
-
-      - name: 'Publish Artifacts: Publish: ARM-Template'
-        uses: actions/upload-artifact@v2
-        with:
-         name: 'ARM-Templates'
-         path: '${{ github.workspace }}/ARM-Templates'
-
-      - name: 'Publish Artifacts: Publish: Powershell Scripts'
-        uses: actions/upload-artifact@v2
-        with:
-         name: 'PowerShell-Scripts'
-         path: '${{ github.workspace }}/PowerShell-Scripts' 
+      # - name: 'Publish Artifacts: Publish: Powershell Scripts'
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #    name: 'PowerShell-Scripts'
+      #    path: '${{ github.workspace }}/PowerShell-Scripts' 
 
       - name: Checkout adf_publish branch
         uses: actions/checkout@v3
@@ -75,7 +65,7 @@ jobs:
       #Publish Artifacts: adf_publish
       
       - name: 'Publish Artifacts: adf_publish'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: 'Publish-Files'
           path: '${{ github.workspace }}/${{ github.event.inputs.ADF_PUBLISH_FOLDER }}'
@@ -88,27 +78,27 @@ jobs:
 
 #############################################################################################
 
-  # Deploy:
-  #   needs: Build
-  #   runs-on: ubuntu-latest
+  Deploy:
+    needs: Build
+    runs-on: ubuntu-latest
 
 
-  #   steps:
+    steps:
 
-  #   #Show Environment Variables
-  #     - name: Display Environment Variable
-  #       uses: azure/powershell@v1
-  #       with:
-  #         inlineScript: |
-  #           dir env:
-  #         azPSVersion: '3.1.0'
+    #Show Environment Variables
+      - name: Display Environment Variable
+        uses: azure/powershell@v1
+        with:
+          inlineScript: |
+            dir env:
+          azPSVersion: '3.1.0'
 
-  #     # Download Publish Files
-  #     - name: 'Download Artifact: Publish-Files'
-  #       uses: actions/download-artifact@v2
-  #       with:
-  #         name: 'Publish-Files'
-  #         path: ${{ github.workspace }}/Publish-Files
+      # Download Publish Files
+      - name: 'Download Artifact: Publish-Files'
+        uses: actions/download-artifact@v2
+        with:
+          name: 'Publish-Files'
+          path: ${{ github.workspace }}/Publish-Files
 
   #     # Login to Azure
   #     - name: Azure Login
