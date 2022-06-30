@@ -1,0 +1,26 @@
+{
+	"name": "df_books_xml_to_sql",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_adls_sapdadls_xml",
+						"type": "DatasetReference"
+					},
+					"name": "xmlsource"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"scriptLines": [
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     validationMode: 'none',",
+				"     namespaces: true) ~> xmlsource"
+			]
+		}
+	}
+}
