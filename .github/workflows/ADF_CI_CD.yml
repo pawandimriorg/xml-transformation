@@ -107,12 +107,12 @@ jobs:
           creds: '{"clientId": "${{ secrets.ARM_CLIENT_ID }}", "clientSecret": "${{ secrets.ARM_CLIENT_SECRET }}", "subscriptionId": "${{ secrets.ARM_SUBSCRIPTION_ID }}", "tenantId": "${{ secrets.ARM_TENANT_ID }}"}'
           enable-AzPSSession: true
 
-  #     # Deploy ADF
-  #     - name: Data Factory Deployment
-  #       uses: Azure/data-factory-deploy-action@v1.2.0
-  #       with:
-  #         resoruceGroupName: "${{ github.event.inputs.RESOURCE_GROUP }}"
-  #         dataFactoryName: "${{ github.event.inputs.ADF_NAME}}"
-  #         armTemplateFile: "${{ github.workspace }}/Publish-Files/ARMTemplateForFactory.json"
-  #         armTemplateParametersFile: "${{ github.workspace }}/Publish-Files/ARMTemplateParametersForFactory.json"
+      # Deploy ADF
+      - name: Data Factory Deployment
+        uses: Azure/data-factory-deploy-action@v1.2.0
+        with:
+          resoruceGroupName: "${{ github.event.inputs.RESOURCE_GROUP }}"
+          dataFactoryName: "${{ github.event.inputs.ADF_NAME}}"
+          armTemplateFile: "${{ github.workspace }}/Publish-Files/ARMTemplateForFactory.json"
+          armTemplateParametersFile: "${{ github.workspace }}/Publish-Files/ARMTemplateParametersForFactory.json"
       
