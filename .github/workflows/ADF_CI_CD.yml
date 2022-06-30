@@ -2,19 +2,38 @@ name: ADF-CI-CD
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
+  # Triggers the workflow on push or pull request events but only for the "adf_publish" branch
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches: [ "adf_publish" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    inputs:
+      ADF_NAME: 
+        description: 'ADF Name to Deploy'
+        required: true
+        default: 'df-xml-transformation-test'
+
+      ADF_PUBLISH_FOLDER:
+        description: 'ADF Publish Folder Name in GIT'
+        required: true
+        default: 'df-xml-transformation-dev'
+
+      RESOURCE_GROUP:
+        description: 'Resource Group Name'
+        required: true
+        default: 'rg-pd-test'
+
+      ENVIRONMENT:
+        description: 'Environment to Deploy'
+        required: true
+        default: 'TEST'
+
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  Build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -32,3 +51,78 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+
+      - name: 'Publish Artifacts: Publish: ARM-Template'
+        uses: actions/upload-artifact@v2
+        with:
+         name: 'ARM-Templates'
+         path: '${{ github.workspace }}/ARM-Templates'
+
+      - name: 'Publish Artifacts: Publish: Powershell Scripts'
+        uses: actions/upload-artifact@v2
+        with:
+         name: 'PowerShell-Scripts'
+         path: '${{ github.workspace }}/PowerShell-Scripts' 
+
+      - name: Checkout adf_publish branch
+        uses: actions/checkout@v3
+        with:
+          ref: adf_publish
+
+      - name: Show Paths
+        run: ls -R
+
+      #Publish Artifacts: adf_publish
+      
+      - name: 'Publish Artifacts: adf_publish'
+        uses: actions/upload-artifact@v2
+        with:
+          name: 'Publish-Files'
+          path: '${{ github.workspace }}/${{ github.event.inputs.ADF_PUBLISH_FOLDER }}'
+
+
+
+#############################################################################################
+
+# DEPLOY
+
+#############################################################################################
+
+  Deploy:
+    needs: Build
+    runs-on: ubuntu-latest
+
+
+    steps:
+
+    #Show Environment Variables
+    - name: Display Environment Variable
+      uses: azure/powershell@v1
+      with:
+        inlineScript: |
+          dir env:
+        azPSVersion: '3.1.0'
+
+    # Download Publish Files
+    - name: 'Download Artifact: Publish-Files'
+      uses: actions/download-artifact@v2
+      with:
+        name: 'Publish-Files'
+        path: ${{ github.workspace }}/Publish-Files
+
+    # Login to Azure
+    - name: Azure Login
+    - uses: azure/login@v1
+      with:
+        creds: '{"clientId": "", "clientSecret": "", "subscriptionId": "", "tenantId": ""}'
+        enable-AzPSSession: true
+
+    # Deploy ADF
+    - name: Data Factory Deployment
+      uses: Azure/data-factory-deploy-action@v1.2.0
+      with:
+        resoruceGroupName: "${{ github.event.inputs.RESOURCE_GROUP }}"
+        dataFactoryName: "${{ github.event.inputs.ADF_NAME}}"
+        armTemplateFile: "${{ github.workspace }}/Publish-Files/ARMTemplateForFactory.json"
+        armTemplateParametersFile: "${{ github.workspace }}/Publish-Files/ARMTemplateParametersForFactory.json"
+      
