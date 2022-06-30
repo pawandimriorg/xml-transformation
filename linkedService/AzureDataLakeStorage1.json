@@ -1,0 +1,27 @@
+{
+	"name": "AzureDataLakeStorage1",
+	"properties": {
+		"parameters": {
+			"environment": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "@{concat('https://sapdadls',linkedService().environment,'.dfs.core.windows.net/')}",
+			"accountKey": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "ls_kv",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "StorageAccountKey"
+			}
+		},
+		"connectVia": {
+			"referenceName": "Az-PD-IR",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
