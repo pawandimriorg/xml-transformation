@@ -1,6 +1,32 @@
 {
 	"name": "pl_copy_book_records",
 	"properties": {
+		"activities": [
+			{
+				"name": "dfCopyXML",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_books_xml_to_sql",
+						"type": "DataFlowReference"
+					},
+					"integrationRuntime": {
+						"referenceName": "Az-PD-IR",
+						"type": "IntegrationRuntimeReference"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
 		"annotations": []
 	}
 }

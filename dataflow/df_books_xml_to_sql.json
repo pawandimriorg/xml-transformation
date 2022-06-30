@@ -65,6 +65,7 @@
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError',",
 				"     mapColumn(",
+				"          id = {@id},",
 				"          author,",
 				"          title,",
 				"          genre,",
