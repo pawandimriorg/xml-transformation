@@ -29,6 +29,10 @@ on:
         required: true
         default: 'TEST'
 
+env:
+  ##SETS Environment Variable
+  env_param_file: 'GITHUB_WORKSPACE/Publish-Files/ARMTemplateParametersForFactory_${{ github.event.inputs.ENVIRONMENT}}'
+  
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
