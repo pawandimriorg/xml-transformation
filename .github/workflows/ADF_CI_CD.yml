@@ -115,5 +115,5 @@ jobs:
           dataFactoryName: "${{ github.event.inputs.ADF_NAME}}"
           armTemplateFile: "${{ github.workspace }}/Publish-Files/ARMTemplateForFactory.json"
           armTemplateParametersFile: "${{ github.workspace }}/Publish-Files/ARMTemplateParametersForFactory.json"
-          additionalParameters: 'ls_kv_properties_typeProperties_baseUrl=https://kvpdtest.vault.azure.net/ ls_adls_properties_typeProperties_url=https://sapdadlstest.dfs.core.windows.net/'
+          additionalParameters: 'ls_kv_properties_typeProperties_baseUrl=https://kvpdtest.vault.azure.net/ ls_adls_properties_typeProperties_url=https://sapdadlstest.dfs.core.windows.net/ pe_sql_properties_privateLinkResourceId=/subscriptions/fae6a450-5060-4ef3-96d1-f4ca2fab4cef/resourceGroups/rg-pd-test/providers/Microsoft.Sql/servers/sqlpdtestserver'
       
