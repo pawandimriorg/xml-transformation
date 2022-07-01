@@ -5,6 +5,9 @@
 		"factoryName": {
 			"value": "df-xml-transformation-dev"
 		},
+		"ls_adls_properties_typeProperties_url": {
+			"value": "https://sapdadlsdev.dfs.core.windows.net/"
+		},
 		"ls_kv_properties_typeProperties_baseUrl": {
 			"value": "https://kvpddev.vault.azure.net/"
 		},
@@ -16,9 +19,6 @@
 		},
 		"pe_sql_properties_groupId": {
 			"value": "sqlServer"
-		},
-		"ls_adls_properties_typeProperties_url": {
-			"value": "@{concat('https://sapdadls',linkedService().environment,'.dfs.core.windows.net/')}"
 		}
 	}
 }
