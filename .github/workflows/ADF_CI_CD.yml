@@ -57,10 +57,6 @@ jobs:
       - name: Checking Local Environment
         run: echo "Environment Name is $extra And New One is $less_word"
 
-      - name: This should be strage
-        if: contains(${{ ENVIRONMENT_CONTEXT }}, 'DEV')
-        run: echo 'Something Happened'
-
 
       # - name: 'Publish Artifacts: Publish: ARM-Template'
       #   uses: actions/upload-artifact@v2
