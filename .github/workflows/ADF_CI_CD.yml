@@ -3,8 +3,8 @@ name: ADF-CI-CD
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the "adf_publish" branch
-  push:
-    branches: [ "main" ]
+  # push:
+  #   branches: [ "main" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -32,6 +32,7 @@ on:
 env:
   ##SETS Environment Variable
   env_param_file: 'GITHUB_WORKSPACE/Publish-Files/ARMTemplateParametersForFactory_${{ github.event.inputs.ENVIRONMENT}}'
+  ENVIRONMENT_CONTEXT: ${{ github.event.inputs.RESOURCE_GROUP }}
   
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -40,12 +41,15 @@ jobs:
   Build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    environment: $ENVIRONMENT_CONTEXT
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
+      - name: Checking Environment Variables Test
+      - run: echo "Environment Name is $ENVIRONMENT_CONTEXT"
       # - name: 'Publish Artifacts: Publish: ARM-Template'
       #   uses: actions/upload-artifact@v2
       #   with:
@@ -104,20 +108,20 @@ jobs:
           name: 'Publish-Files'
           path: ${{ github.workspace }}/Publish-Files
 
-      # Login to Azure
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          creds: '{"clientId": "${{ secrets.ARM_CLIENT_ID }}", "clientSecret": "${{ secrets.ARM_CLIENT_SECRET }}", "subscriptionId": "${{ secrets.ARM_SUBSCRIPTION_ID }}", "tenantId": "${{ secrets.ARM_TENANT_ID }}"}'
-          enable-AzPSSession: true
+      # # Login to Azure
+      # - name: Azure Login
+      #   uses: azure/login@v1
+      #   with:
+      #     creds: '{"clientId": "${{ secrets.ARM_CLIENT_ID }}", "clientSecret": "${{ secrets.ARM_CLIENT_SECRET }}", "subscriptionId": "${{ secrets.ARM_SUBSCRIPTION_ID }}", "tenantId": "${{ secrets.ARM_TENANT_ID }}"}'
+      #     enable-AzPSSession: true
 
-      # Deploy ADF
-      - name: Data Factory Deployment
-        uses: Azure/data-factory-deploy-action@v1.2.0
-        with:
-          resourceGroupName: "${{ github.event.inputs.RESOURCE_GROUP }}"
-          dataFactoryName: "${{ github.event.inputs.ADF_NAME}}"
-          armTemplateFile: "${{ github.workspace }}/Publish-Files/ARMTemplateForFactory.json"
-          armTemplateParametersFile: "${{ github.workspace }}/Publish-Files/ARMTemplateParametersForFactory.json"
-          additionalParameters: 'ls_kv_properties_typeProperties_baseUrl=https://kvpdtest.vault.azure.net/ ls_adls_properties_typeProperties_url=https://sapdadlstest.dfs.core.windows.net/ pe_sql_properties_privateLinkResourceId=/subscriptions/fae6a450-5060-4ef3-96d1-f4ca2fab4cef/resourceGroups/rg-pd-test/providers/Microsoft.Sql/servers/sqlpdtestserver'
+      # # Deploy ADF
+      # - name: Data Factory Deployment
+      #   uses: Azure/data-factory-deploy-action@v1.2.0
+      #   with:
+      #     resourceGroupName: "${{ github.event.inputs.RESOURCE_GROUP }}"
+      #     dataFactoryName: "${{ github.event.inputs.ADF_NAME}}"
+      #     armTemplateFile: "${{ github.workspace }}/Publish-Files/ARMTemplateForFactory.json"
+      #     armTemplateParametersFile: "${{ github.workspace }}/Publish-Files/ARMTemplateParametersForFactory.json"
+      #     additionalParameters: 'ls_kv_properties_typeProperties_baseUrl=https://kvpdtest.vault.azure.net/ ls_adls_properties_typeProperties_url=https://sapdadlstest.dfs.core.windows.net/ pe_sql_properties_privateLinkResourceId=/subscriptions/fae6a450-5060-4ef3-96d1-f4ca2fab4cef/resourceGroups/rg-pd-test/providers/Microsoft.Sql/servers/sqlpdtestserver'
       
