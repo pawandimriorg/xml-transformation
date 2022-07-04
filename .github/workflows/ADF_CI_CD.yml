@@ -95,6 +95,7 @@ jobs:
 #############################################################################################
 
   Deploy:
+    if: github.event.inputs.ENVIRONMENT == 'PROD'
     needs: Build
     runs-on: ubuntu-latest
     
