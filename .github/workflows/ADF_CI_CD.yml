@@ -95,19 +95,19 @@ jobs:
 #############################################################################################
 
   Deploy:
-    if: env.ENVIRONMENT_CONTEXT == 'PROD'
+
     needs: Build
     runs-on: ubuntu-latest
     
     steps:
 
     #Show Environment Variables
-      - name: Display Environment Variable
-        uses: azure/powershell@v1
-        with:
-          inlineScript: |
-            dir env:
-          azPSVersion: '3.1.0'
+      # - name: Display Environment Variable
+      #   uses: azure/powershell@v1
+      #   with:
+      #     inlineScript: |
+      #       dir env:
+      #     azPSVersion: '3.1.0'
 
       # Download Publish Files
       - name: 'Download Artifact: Publish-Files'
@@ -115,6 +115,15 @@ jobs:
         with:
           name: 'Publish-Files'
           path: ${{ github.workspace }}/Publish-Files
+
+      - name: 'For Dev Only'
+        if: github.event.inputs.ENVIRONMENT == 'TEST'
+        run: echo 'Test Only'
+
+      - name: 'For Prod Only'
+        if: github.event.inputs.ENVIRONMENT == 'PROD'
+        run: echo 'Prod Only'
+
 
       # # Login to Azure
       # - name: Azure Login
