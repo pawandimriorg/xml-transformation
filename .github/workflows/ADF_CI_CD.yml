@@ -58,7 +58,7 @@ jobs:
         run: echo "Environment Name is $extra And New One is $less_word"
 
       - name: This should be strage
-        if: contains($ENVIRONMENT_CONTEXT, 'DEV')
+        if: contains(${{ ENVIRONMENT_CONTEXT }}, 'DEV')
         run: echo 'Something Happened'
 
 
