@@ -98,7 +98,7 @@ jobs:
     steps:
 
     #Show Environment Variables
-      - if: "${{ github.event.inputs.ENVIRONMENT }} == 'DEV'"
+      - if: ${{ github.event.inputs.ENVIRONMENT }} == 'DEV'
         name: Display Environment Variable
         uses: azure/powershell@v1
         with:
