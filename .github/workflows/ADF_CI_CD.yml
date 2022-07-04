@@ -43,8 +43,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: $ENVIRONMENT_CONTEXT
     env:
-      extra: 'Hello World'
-      less: 'Win World'
+      extra: Hello World
+      less_word: Win World
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -55,7 +55,7 @@ jobs:
         run: echo "Environment Name is $ENVIRONMENT_CONTEXT"
 
       - name: Checking Local Environment
-        run: echo "Environment Name is $extra And New One is $less"
+        run: echo "Environment Name is $extra And New One is $less_word"
 
 
       # - name: 'Publish Artifacts: Publish: ARM-Template'
