@@ -57,6 +57,10 @@ jobs:
       - name: Checking Local Environment
         run: echo "Environment Name is $extra And New One is $less_word"
 
+      - name: This should be strage
+        if: contains($ENVIRONMENT_CONTEXT, 'DEV')
+        run: echo 'Something Happened'
+
 
       # - name: 'Publish Artifacts: Publish: ARM-Template'
       #   uses: actions/upload-artifact@v2
@@ -102,7 +106,6 @@ jobs:
 
     #Show Environment Variables
       - name: Display Environment Variable
-        if: contains($ENVIRONMENT_CONTEXT, 'DEV')
         uses: azure/powershell@v1
         with:
           inlineScript: |
