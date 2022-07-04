@@ -93,12 +93,13 @@ jobs:
     needs: Build
     runs-on: ubuntu-latest
     environment: $ENVIRONMENT_CONTEXT
-    if: "${{ github.event.inputs.ENVIRONMENT }} == 'DEV'"
+    
 
     steps:
 
     #Show Environment Variables
-      - name: Display Environment Variable
+      - if: "${{ github.event.inputs.ENVIRONMENT }} == 'DEV'"
+        name: Display Environment Variable
         uses: azure/powershell@v1
         with:
           inlineScript: |
