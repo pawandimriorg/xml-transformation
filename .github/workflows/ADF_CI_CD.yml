@@ -101,8 +101,8 @@ jobs:
     steps:
 
     #Show Environment Variables
-      - if: contains($ENVIRONMENT_CONTEXT, 'DEV')
       - name: Display Environment Variable
+        if: contains($ENVIRONMENT_CONTEXT, 'DEV')
         uses: azure/powershell@v1
         with:
           inlineScript: |
