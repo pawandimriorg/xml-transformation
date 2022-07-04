@@ -120,8 +120,8 @@ jobs:
         if: github.event.inputs.ENVIRONMENT == 'TEST'
         run: echo 'Test Only'
 
-      - name: 'For Prod Only'
-        if: github.event.inputs.ENVIRONMENT == 'PROD'
+      - if: github.event.inputs.ENVIRONMENT == 'PROD'
+        name: 'For Prod Only'
         run: echo 'Prod Only'
 
 
