@@ -95,7 +95,7 @@ jobs:
 #############################################################################################
 
   Deploy:
-    if: $ENVIRONMENT_CONTEXT == 'PROD'
+    if: ENVIRONMENT_CONTEXT == 'PROD'
     needs: Build
     runs-on: ubuntu-latest
     
