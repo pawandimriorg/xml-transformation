@@ -101,6 +101,7 @@ jobs:
     steps:
 
     #Show Environment Variables
+      - if: contains($ENVIRONMENT_CONTEXT, 'DEV')
       - name: Display Environment Variable
         uses: azure/powershell@v1
         with:
