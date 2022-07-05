@@ -140,7 +140,7 @@ jobs:
         id: myGetSecretAction # ID for secrets that you will referenceoy ADF
 
       - name: Check Secret
-        run: echo ${{ steps.myGetSecretAction.outputs.SQLConnectionString }}
+        run: echo '${{ steps.myGetSecretAction.outputs.SQLConnectionString }}'
 
 
       # - name: Data Factory Deployment
