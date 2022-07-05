@@ -140,7 +140,11 @@ jobs:
         id: myGetSecretAction # ID for secrets that you will referenceoy ADF
 
       - name: Check Secret
-        run: echo '${{ steps.myGetSecretAction.outputs.SQLConnectionString }}'
+        uses: Azure/CLI@v1
+        with:
+          azcliversion: 2.0.72
+          inlineScript: |
+            echo '${{ steps.myGetSecretAction.outputs.SQLConnectionString }}'
 
 
       # - name: Data Factory Deployment
