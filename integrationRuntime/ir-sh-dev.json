@@ -1,0 +1,6 @@
+{
+	"name": "ir-sh-dev",
+	"properties": {
+		"type": "SelfHosted"
+	}
+}
