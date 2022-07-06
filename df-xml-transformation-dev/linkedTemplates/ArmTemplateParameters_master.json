@@ -5,6 +5,9 @@
 		"factoryName": {
 			"value": "df-xml-transformation-dev"
 		},
+		"ls_sql_on_prem_connectionString": {
+			"value": ""
+		},
 		"ls_adls_properties_typeProperties_url": {
 			"value": "https://sapdadlsdev.dfs.core.windows.net/"
 		},
@@ -14,11 +17,20 @@
 		"ls_sqldb_properties_typeProperties_connectionString_secretName": {
 			"value": "SQLConnectionString"
 		},
+		"pe_adls_properties_privateLinkResourceId": {
+			"value": "/subscriptions/fae6a450-5060-4ef3-96d1-f4ca2fab4cef/resourceGroups/rg-pd-dev/providers/Microsoft.Storage/storageAccounts/sapdadlsdev"
+		},
+		"pe_adls_properties_groupId": {
+			"value": "dfs"
+		},
 		"pe_sql_properties_privateLinkResourceId": {
 			"value": "/subscriptions/fae6a450-5060-4ef3-96d1-f4ca2fab4cef/resourceGroups/rg-pd-dev/providers/Microsoft.Sql/servers/sqlpd"
 		},
 		"pe_sql_properties_groupId": {
 			"value": "sqlServer"
+		},
+		"ls_sql_on_prem_properties_typeProperties_userName": {
+			"value": "pawan"
 		},
 		"containerUri": {
 			"value": ""
