@@ -1,0 +1,23 @@
+{
+	"name": "ls_sql_on_prem",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "Integrated Security=True;Data Source=DESKTOP-MGP2FU3;Initial Catalog=AdventureWorks2019",
+			"userName": "pawan",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "ls_kv",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "Local"
+			}
+		},
+		"connectVia": {
+			"referenceName": "ir-sh-dev",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
