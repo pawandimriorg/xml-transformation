@@ -1,0 +1,16 @@
+{
+	"name": "ds_sqldb_books_on_prem",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sql_on_prem",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Books"
+		}
+	}
+}
