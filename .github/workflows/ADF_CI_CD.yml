@@ -98,7 +98,11 @@ jobs:
 
     needs: Build
     runs-on: ubuntu-latest
-    
+    env:
+      ls_kv_url: https://kvpdtest.vault.azure.net/
+      ls_adls_url: https://sapdadlstest.dfs.core.windows.net/
+      pe_sql_resource_id: /subscriptions/fae6a450-5060-4ef3-96d1-f4ca2fab4cef/resourceGroups/rg-pd-test/providers/Microsoft.Sql/servers/sqlpdtestserver
+
     steps:
 
     #Show Environment Variables
@@ -154,5 +158,5 @@ jobs:
           dataFactoryName: "${{ github.event.inputs.ADF_NAME}}"
           armTemplateFile: "${{ github.workspace }}/Publish-Files/ARMTemplateForFactory.json"
           armTemplateParametersFile: "${{ github.workspace }}/Publish-Files/ARMTemplateParametersForFactory.json"
-          additionalParameters: 'ls_kv_properties_typeProperties_baseUrl=https://kvpdtest.vault.azure.net/ ls_adls_properties_typeProperties_url=https://sapdadlstest.dfs.core.windows.net/ pe_sql_properties_privateLinkResourceId=/subscriptions/fae6a450-5060-4ef3-96d1-f4ca2fab4cef/resourceGroups/rg-pd-test/providers/Microsoft.Sql/servers/sqlpdtestserver'
+          additionalParameters: 'ls_kv_properties_typeProperties_baseUrl=$ls_kv_url ls_adls_properties_typeProperties_url=$ls_adls_url pe_sql_properties_privateLinkResourceId=$pe_sql_resource_id'
       
