@@ -15,13 +15,9 @@
 			"type": "string",
 			"defaultValue": "https://kvpddev.vault.azure.net/"
 		},
-		"ls_adls_properties_typeProperties_url": {
+		"ls_sql_on_prem_properties_typeProperties_userName": {
 			"type": "string",
-			"defaultValue": "https://sapdadlsdev.dfs.core.windows.net/"
-		},
-		"ls_sqldb_properties_typeProperties_connectionString_secretName": {
-			"type": "string",
-			"defaultValue": "SQLConnectionString"
+			"defaultValue": "pawan"
 		},
 		"pe_adls_properties_privateLinkResourceId": {
 			"type": "string",
@@ -31,17 +27,13 @@
 			"type": "string",
 			"defaultValue": "dfs"
 		},
-		"pe_sql_properties_privateLinkResourceId": {
+		"ls_adls_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "/subscriptions/fae6a450-5060-4ef3-96d1-f4ca2fab4cef/resourceGroups/rg-pd-dev/providers/Microsoft.Sql/servers/sqlpd"
+			"defaultValue": "https://sapdadlsdev.dfs.core.windows.net/"
 		},
-		"pe_sql_properties_groupId": {
+		"ls_sqldb_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
-			"defaultValue": "sqlServer"
-		},
-		"ls_sql_on_prem_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "pawan"
+			"defaultValue": "SQLConnectionString"
 		}
 	},
 	"variables": {
@@ -60,6 +52,77 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ir-sh-dev')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/default')]",
+			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks",
+			"apiVersion": "2018-06-01",
+			"properties": {},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_sql_on_prem')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('ls_sql_on_prem_connectionString')]",
+					"userName": "[parameters('ls_sql_on_prem_properties_typeProperties_userName')]",
+					"password": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "ls_kv",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "Local"
+					}
+				},
+				"connectVia": {
+					"referenceName": "ir-sh-dev",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/ir-sh-dev')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_kv')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AutoResolveIntegrationRuntime')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "Managed",
+				"typeProperties": {
+					"computeProperties": {
+						"location": "AutoResolve",
+						"dataFlowProperties": {
+							"computeType": "General",
+							"coreCount": 8,
+							"timeToLive": 0
+						}
+					}
+				},
+				"managedVirtualNetwork": {
+					"type": "ManagedVirtualNetworkReference",
+					"referenceName": "default"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Az-PD-IR')]",
@@ -95,21 +158,37 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ir-sh-dev')]",
-			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"name": "[concat(parameters('factoryName'), '/default/pe_adls')]",
+			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks/managedPrivateEndpoints",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"type": "SelfHosted",
-				"typeProperties": {}
+				"privateLinkResourceId": "[parameters('pe_adls_properties_privateLinkResourceId')]",
+				"groupId": "[parameters('pe_adls_properties_groupId')]"
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
+			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/default')]",
-			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks",
+			"name": "[concat(parameters('factoryName'), '/ds_sqldb_books_on_prem')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
-			"properties": {},
-			"dependsOn": []
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_sql_on_prem",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Books"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_sql_on_prem')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/ls_adls')]",
@@ -163,84 +242,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/integrationRuntimes/Az-PD-IR')]",
-				"[concat(variables('factoryId'), '/linkedServices/ls_kv')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AutoResolveIntegrationRuntime')]",
-			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "Managed",
-				"typeProperties": {
-					"computeProperties": {
-						"location": "AutoResolve",
-						"dataFlowProperties": {
-							"computeType": "General",
-							"coreCount": 8,
-							"timeToLive": 0
-						}
-					}
-				},
-				"managedVirtualNetwork": {
-					"type": "ManagedVirtualNetworkReference",
-					"referenceName": "default"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/default/pe_adls')]",
-			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks/managedPrivateEndpoints",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"privateLinkResourceId": "[parameters('pe_adls_properties_privateLinkResourceId')]",
-				"groupId": "[parameters('pe_adls_properties_groupId')]"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/default/pe_sql')]",
-			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks/managedPrivateEndpoints",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"privateLinkResourceId": "[parameters('pe_sql_properties_privateLinkResourceId')]",
-				"groupId": "[parameters('pe_sql_properties_groupId')]"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ls_sql_on_prem')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "SqlServer",
-				"typeProperties": {
-					"connectionString": "[parameters('ls_sql_on_prem_connectionString')]",
-					"userName": "[parameters('ls_sql_on_prem_properties_typeProperties_userName')]",
-					"password": {
-						"type": "AzureKeyVaultSecret",
-						"store": {
-							"referenceName": "ls_kv",
-							"type": "LinkedServiceReference"
-						},
-						"secretName": "Local"
-					}
-				},
-				"connectVia": {
-					"referenceName": "ir-sh-dev",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/ir-sh-dev')]",
 				"[concat(variables('factoryId'), '/linkedServices/ls_kv')]"
 			]
 		},
@@ -309,110 +310,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_sqldb')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_sqldb_books_on_prem')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_sql_on_prem",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "Books"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_sql_on_prem')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_books_xml_to_sql')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ds_adls_sapdadls_xml",
-								"type": "DatasetReference"
-							},
-							"name": "xmlsource"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ds_sqldb_books",
-								"type": "DatasetReference"
-							},
-							"name": "sinkbooktable"
-						}
-					],
-					"transformations": [
-						{
-							"name": "flattenXML"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          catalog as (book as ({@id} as string, author as string, description as string, genre as string, price as double, publish_date as date, title as string)[])",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false,",
-						"     validationMode: 'none',",
-						"     namespaces: true) ~> xmlsource",
-						"xmlsource foldDown(unroll(catalog.book, catalog.book),",
-						"     mapColumn(",
-						"          {@id} = catalog.book.{@id},",
-						"          author = catalog.book.author,",
-						"          description = catalog.book.description,",
-						"          genre = catalog.book.genre,",
-						"          price = catalog.book.price,",
-						"          publish_date = catalog.book.publish_date,",
-						"          title = catalog.book.title",
-						"     ),",
-						"     skipDuplicateMapInputs: false,",
-						"     skipDuplicateMapOutputs: false) ~> flattenXML",
-						"flattenXML sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          id as string,",
-						"          author as string,",
-						"          title as string,",
-						"          genre as string,",
-						"          price as double",
-						"     ),",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError',",
-						"     mapColumn(",
-						"          id = {@id},",
-						"          author,",
-						"          title,",
-						"          genre,",
-						"          price",
-						"     )) ~> sinkbooktable"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_adls_sapdadls_xml')]",
-				"[concat(variables('factoryId'), '/datasets/ds_sqldb_books')]"
 			]
 		},
 		{
@@ -546,13 +443,96 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/df_books_xml_to_sql')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_adls_sapdadls_xml",
+								"type": "DatasetReference"
+							},
+							"name": "xmlsource"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_sqldb_books",
+								"type": "DatasetReference"
+							},
+							"name": "sinkbooktable"
+						}
+					],
+					"transformations": [
+						{
+							"name": "flattenXML"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          catalog as (book as ({@id} as string, author as string, description as string, genre as string, price as double, publish_date as date, title as string)[])",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     validationMode: 'none',",
+						"     namespaces: true) ~> xmlsource",
+						"xmlsource foldDown(unroll(catalog.book, catalog.book),",
+						"     mapColumn(",
+						"          {@id} = catalog.book.{@id},",
+						"          author = catalog.book.author,",
+						"          description = catalog.book.description,",
+						"          genre = catalog.book.genre,",
+						"          price = catalog.book.price,",
+						"          publish_date = catalog.book.publish_date,",
+						"          title = catalog.book.title",
+						"     ),",
+						"     skipDuplicateMapInputs: false,",
+						"     skipDuplicateMapOutputs: false) ~> flattenXML",
+						"flattenXML sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          id as string,",
+						"          author as string,",
+						"          title as string,",
+						"          genre as string,",
+						"          price as double",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          id = {@id},",
+						"          author,",
+						"          title,",
+						"          genre,",
+						"          price",
+						"     )) ~> sinkbooktable"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_adls_sapdadls_xml')]",
+				"[concat(variables('factoryId'), '/datasets/ds_sqldb_books')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/pl_copy_book_records')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "dfCopyXML",
+						"name": "dfCopy_XML_data",
 						"type": "ExecuteDataFlow",
 						"dependsOn": [],
 						"policy": {
