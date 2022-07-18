@@ -31,6 +31,12 @@
 		},
 		"pe_sql_properties_groupId": {
 			"value": "sqlServer"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
 		}
 	}
 }

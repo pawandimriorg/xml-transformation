@@ -34,6 +34,14 @@
 		"pe_adls_properties_groupId": {
 			"type": "string",
 			"defaultValue": "dfs"
+		},
+		"pe_sql_properties_privateLinkResourceId": {
+			"type": "string",
+			"defaultValue": "/subscriptions/fae6a450-5060-4ef3-96d1-f4ca2fab4cef/resourceGroups/rg-pd-dev/providers/Microsoft.Sql/servers/sqlpd"
+		},
+		"pe_sql_properties_groupId": {
+			"type": "string",
+			"defaultValue": "sqlServer"
 		}
 	},
 	"variables": {
@@ -47,7 +55,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "dfCopy_XML_data",
+						"name": "dfCopy_XML_Data",
 						"type": "ExecuteDataFlow",
 						"dependsOn": [],
 						"policy": {
@@ -568,6 +576,18 @@
 			"properties": {
 				"privateLinkResourceId": "[parameters('pe_adls_properties_privateLinkResourceId')]",
 				"groupId": "[parameters('pe_adls_properties_groupId')]"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/default/pe_sql')]",
+			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks/managedPrivateEndpoints",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"privateLinkResourceId": "[parameters('pe_sql_properties_privateLinkResourceId')]",
+				"groupId": "[parameters('pe_sql_properties_groupId')]"
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
