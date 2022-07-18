@@ -154,5 +154,5 @@ jobs:
           dataFactoryName: "${{ github.event.inputs.ADF_NAME}}"
           armTemplateFile: "${{ github.workspace }}/Publish-Files/ARMTemplateForFactory.json"
           armTemplateParametersFile: "${{ github.workspace }}/Publish-Files/ARMTemplateParametersForFactory.json"
-          additionalParameters: 'ls_kv_properties_typeProperties_baseUrl=${{ steps.myGetSecretAction.outputs.adf-deploy-kv-url }} pe_sql_properties_privateLinkResourceId=${{ steps.myGetSecretAction.outputs.adf-deploy-kv-url }}'
+          additionalParameters: 'ls_kv_properties_typeProperties_baseUrl=${{ steps.myGetSecretAction.outputs.adf-deploy-kv-url }} pe_sql_properties_privateLinkResourceId=${{ steps.myGetSecretAction.outputs.adf-deploy-sql-resource-id }}'
       
