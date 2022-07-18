@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "dfCopy_XML_data",
+				"name": "dfCopy_XML_Data",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
