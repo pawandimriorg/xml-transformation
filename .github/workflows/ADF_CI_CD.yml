@@ -136,7 +136,7 @@ jobs:
         uses: Azure/get-keyvault-secrets@v1
         with:
           keyvault: "kvpdtest" # name of key vault in Azure portal
-          secrets: 'SQLConnectionString'  # comma separated list of secret keys to fetch from key vault 
+          secrets: 'adf-deploy-kv-url'  # comma separated list of secret keys to fetch from key vault 
         id: myGetSecretAction # ID for secrets that you will referenceoy ADF
 
       - name: Check Secret
@@ -144,7 +144,7 @@ jobs:
         with:
           azcliversion: 2.0.72
           inlineScript: |
-            echo '${{ steps.myGetSecretAction.outputs.SQLConnectionString }}'
+            echo '${{ steps.myGetSecretAction.outputs.adf-deploy-kv-url }}'
 
 
       - name: Data Factory Deployment
@@ -154,5 +154,5 @@ jobs:
           dataFactoryName: "${{ github.event.inputs.ADF_NAME}}"
           armTemplateFile: "${{ github.workspace }}/Publish-Files/ARMTemplateForFactory.json"
           armTemplateParametersFile: "${{ github.workspace }}/Publish-Files/ARMTemplateParametersForFactory.json"
-          additionalParameters: 'ls_kv_properties_typeProperties_baseUrl=https://kvpdtest.vault.azure.net/ ls_adls_properties_typeProperties_url=https://sapdadlstest.dfs.core.windows.net/ pe_sql_properties_privateLinkResourceId=/subscriptions/fae6a450-5060-4ef3-96d1-f4ca2fab4cef/resourceGroups/rg-pd-test/providers/Microsoft.Sql/servers/sqlpdtestserver'
+          additionalParameters: 'ls_kv_properties_typeProperties_baseUrl=${{ steps.myGetSecretAction.outputs.adf-deploy-kv-url }} ls_adls_properties_typeProperties_url=https://sapdadlstest.dfs.core.windows.net/ pe_sql_properties_privateLinkResourceId=/subscriptions/fae6a450-5060-4ef3-96d1-f4ca2fab4cef/resourceGroups/rg-pd-test/providers/Microsoft.Sql/servers/sqlpdtestserver'
       
