@@ -19,18 +19,6 @@
 		},
 		"ls_sqldb_properties_typeProperties_connectionString_secretName": {
 			"value": "SQLConnectionString"
-		},
-		"pe_adls_properties_privateLinkResourceId": {
-			"value": "/subscriptions/fae6a450-5060-4ef3-96d1-f4ca2fab4cef/resourceGroups/rg-pd-dev/providers/Microsoft.Storage/storageAccounts/sapdadlsdev"
-		},
-		"pe_adls_properties_groupId": {
-			"value": "dfs"
-		},
-		"pe_sql_properties_privateLinkResourceId": {
-			"value": "/subscriptions/fae6a450-5060-4ef3-96d1-f4ca2fab4cef/resourceGroups/rg-pd-dev/providers/Microsoft.Sql/servers/sqlpd"
-		},
-		"pe_sql_properties_groupId": {
-			"value": "sqlServer"
 		}
 	}
 }

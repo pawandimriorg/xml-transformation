@@ -27,22 +27,6 @@
 			"type": "string",
 			"defaultValue": "SQLConnectionString"
 		},
-		"pe_adls_properties_privateLinkResourceId": {
-			"type": "string",
-			"defaultValue": "/subscriptions/fae6a450-5060-4ef3-96d1-f4ca2fab4cef/resourceGroups/rg-pd-dev/providers/Microsoft.Storage/storageAccounts/sapdadlsdev"
-		},
-		"pe_adls_properties_groupId": {
-			"type": "string",
-			"defaultValue": "dfs"
-		},
-		"pe_sql_properties_privateLinkResourceId": {
-			"type": "string",
-			"defaultValue": "/subscriptions/fae6a450-5060-4ef3-96d1-f4ca2fab4cef/resourceGroups/rg-pd-dev/providers/Microsoft.Sql/servers/sqlpd"
-		},
-		"pe_sql_properties_groupId": {
-			"type": "string",
-			"defaultValue": "sqlServer"
-		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -78,18 +62,6 @@
 					},
 					"ls_sql_on_prem_properties_typeProperties_userName": {
 						"value": "[parameters('ls_sql_on_prem_properties_typeProperties_userName')]"
-					},
-					"pe_adls_properties_privateLinkResourceId": {
-						"value": "[parameters('pe_adls_properties_privateLinkResourceId')]"
-					},
-					"pe_adls_properties_groupId": {
-						"value": "[parameters('pe_adls_properties_groupId')]"
-					},
-					"pe_sql_properties_privateLinkResourceId": {
-						"value": "[parameters('pe_sql_properties_privateLinkResourceId')]"
-					},
-					"pe_sql_properties_groupId": {
-						"value": "[parameters('pe_sql_properties_groupId')]"
 					},
 					"ls_adls_properties_typeProperties_url": {
 						"value": "[parameters('ls_adls_properties_typeProperties_url')]"
