@@ -1,7 +1,0 @@
-{
-	"name": "pe_adls",
-	"properties": {
-		"privateLinkResourceId": "/subscriptions/fae6a450-5060-4ef3-96d1-f4ca2fab4cef/resourceGroups/rg-pd-dev/providers/Microsoft.Storage/storageAccounts/sapdadlsdev",
-		"groupId": "dfs"
-	}
-}
